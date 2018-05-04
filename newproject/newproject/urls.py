@@ -31,7 +31,6 @@ urlpatterns = [
     url(r'^about$','museos.views.about'),
     url(r'^(\w+)$','museos.views.usuario'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^(/style.css)$', serve, {'document_root': settings.STATIC_URL}),
-
+    url(r'^(style.css/)$', serve, {'document_root': "templates/museos"})
 
 ]

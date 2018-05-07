@@ -27,6 +27,8 @@ class Museo(models.Model):
     telefono = models.CharField(max_length=32)
     fax = models.CharField(max_length=32)
     email = models.CharField(max_length=32)
+    comentarios = models.IntegerField()
+
 
     def __str__(self):
         return self.nombre

@@ -14,6 +14,7 @@ body {
 	color: #454545;
 }
 
+
 a {
 	color: #4A8EBC;
 	background: inherit;
@@ -108,6 +109,10 @@ input.login {
 
 /* layout
    ------ */
+
+.registro{
+	text-align: right;
+}
 
 .content {
 	margin: 10px auto;
@@ -246,7 +251,7 @@ input.login {
 		padding: 3px 12px;
 		margin: 0 0 15px 0;
 		background: #6E6E6E url(lb.gif) no-repeat bottom left;
-		height: 178px;
+		height: 150px;
 	}
 
 	.lbox a {

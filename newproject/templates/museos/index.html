@@ -17,9 +17,6 @@
 
 		<img src="foto.png" alt="" />
 		<h1>Museos de la Comunidad de Madrid</h1>
-		<h1>{{registro | safe}}</h1>
-
-
 
 
 		<div class="header_right">
@@ -27,6 +24,9 @@
 				<div class="top_info_right">
 				</div>
 			</div>
+
+			{{registro | safe}}
+
 			<div class="bar">
 				<ul>
 
@@ -54,22 +54,55 @@
 		<div class="subheader">
 		</div>
 		<div class="left">
-			<div class="left_articles"> <h1>{{contenido}}</h1>
+			<div class="left_articles"> <h1>{{contenido | safe}}</h1>
+
 				{{formulario | safe}}
-				{{museos}}
+				{{formulario_filtro | safe}}
+
+			</div>
+
+			{{lista_museos | safe}}
+
+			<div class="lt"></div>
+			<div class="lbox">
+				<div class="thumb">
+					{{museo1| safe}}
+				</div>
 			</div>
 
 
 			<div class="lt"></div>
 			<div class="lbox">
 				<div class="thumb">
+					{{museo2| safe}}
 				</div>
 			</div>
+
 			<div class="lt"></div>
 			<div class="lbox">
-			<div class="thumb">
+				<div class="thumb">
+					{{museo3| safe}}
+				</div>
 			</div>
+
+
+			<div class="lt"></div>
+			<div class="lbox">
+				<div class="thumb">
+					{{museo4| safe}}
+				</div>
 			</div>
+
+			<div class="lt"></div>
+			<div class="lbox">
+				<div class="thumb">
+					{{museo5| safe}}
+				</div>
+			</div>
+
+			{{desplegable | safe}}
+
+
 		</div>
 		<div class="right">
 			<div class="rt"></div>

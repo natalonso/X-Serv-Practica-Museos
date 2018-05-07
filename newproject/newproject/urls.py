@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^logout$', logout),
     url(r'^login', login),
     url(r'^$','museos.views.principal'),
+    url(r'^(\d+)$','museos.views.principal_anotada'),
     url(r'^museos$','museos.views.museos'),
     url(r'^museo/(\d+)$','museos.views.museo_id'),
     url(r'^usuario/xml$','museos.views.usuario_xml'),

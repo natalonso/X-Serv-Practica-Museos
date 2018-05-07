@@ -10,15 +10,14 @@ class Museo(models.Model):
     transporte = models.CharField(max_length=32)
     accesibilidad = models.CharField(max_length=32)
     url = models.CharField(max_length=32)
-    via = models.CharField(max_length=32)
-    clase = models.CharField(max_length=32)
-    tipo = models.CharField(max_length=32)
-    num = models.CharField(max_length=32)
-    localidad = models.CharField(max_length=32)
-    provincia = models.CharField(max_length=32)
+    via = models.CharField(max_length=32) #
+    clase = models.CharField(max_length=32) #
+    tipo = models.CharField(max_length=32) #
+    num = models.CharField(max_length=32) #
+    localidad = models.CharField(max_length=32) #
+    provincia = models.CharField(max_length=32) #
     codigo = models.CharField(max_length=32)
     barrio = models.CharField(max_length=32)
-    distrito = models.CharField(max_length=32)
     distrito = models.CharField(max_length=32)
     coordenadax = models.CharField(max_length=32)
     coordenaday = models.CharField(max_length=32)

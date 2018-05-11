@@ -10,12 +10,12 @@ class Museo(models.Model):
     transporte = models.CharField(max_length=32)
     accesibilidad = models.CharField(max_length=32)
     url = models.CharField(max_length=32)
-    via = models.CharField(max_length=32) #
-    clase = models.CharField(max_length=32) #
-    tipo = models.CharField(max_length=32) #
-    num = models.CharField(max_length=32) #
-    localidad = models.CharField(max_length=32) #
-    provincia = models.CharField(max_length=32) #
+    via = models.CharField(max_length=32)
+    clase = models.CharField(max_length=32)
+    tipo = models.CharField(max_length=32)
+    num = models.CharField(max_length=32)
+    localidad = models.CharField(max_length=32)
+    provincia = models.CharField(max_length=32)
     codigo = models.CharField(max_length=32)
     barrio = models.CharField(max_length=32)
     distrito = models.CharField(max_length=32)
@@ -28,6 +28,15 @@ class Museo(models.Model):
     email = models.CharField(max_length=32)
     comentarios = models.IntegerField()
 
-
     def __str__(self):
         return self.nombre
+
+class Museo_Usuario(models.Model):
+    usuario = models.CharField(max_length=532)
+    id_museo = models.CharField(max_length=532)
+
+
+
+class Comentario(models.Model):
+    comentario = models.CharField(max_length=532)
+    autor = models.CharField(max_length=532)

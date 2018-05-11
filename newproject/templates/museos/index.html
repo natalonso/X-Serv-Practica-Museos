@@ -1,123 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta name="author" content="NATALIA ALONSO" />
-	<meta http-equiv="content-type" content="utf-8" />
-	<link rel="stylesheet" href="/style.css" type="text/css" />
-	<title>Museos</title>
-</head>
-<body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="header">
+        <div class="img-box">
+          <img src="foto.png" alt="">
+        </div>
+        <div class="log-box">
+          {{registro | safe}}
+        </div>
+      </div>
+      <div class="">
+        <h1>Museos de la Comunidad de Madrid</h1>
+      </div>
+      <div class="nav">
+        <ul>
+          <li><a href="/">Principal</a></li>
+          <li><a href="/museos">Museos</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </div>
+      <div class="content">
 
-
-
-
-	<div class="content">
-
-
-
-		<img src="foto.png" alt="" />
-		<h1>Museos de la Comunidad de Madrid</h1>
-
-
-		<div class="header_right">
-			<div class="top_info">
-				<div class="top_info_right">
-				</div>
-			</div>
-
-			{{registro | safe}}
-
-			<div class="bar">
-				<ul>
-
-
-
-					<li class="slogan">Búsqueda por Categorias:</li>
-					<li><a href="/museos" accesskey="b">Museos</a></li>
-					<li><a href="/usuario" accesskey="a">Usuario</a></li>
-					<li><a href="/about" accesskey="p">About</a></li>
-
-
-
-				</ul>
-
-			</div>
-		</div>
-
-
-		<div class="search_field">
-			<form method="post" action="?">
-			</form>
-		</div>
-		<div class="newsletter">
-		</div>
-		<div class="subheader">
-		</div>
-		<div class="left">
-			<div class="left_articles"> <h1>{{contenido | safe}}</h1>
-
-				{{formulario | safe}}
-				{{formulario_filtro | safe}}
-
-			</div>
-
-			{{lista_museos | safe}}
-
-			<div class="lt"></div>
-			<div class="lbox">
-				<div class="thumb">
-					{{museo1| safe}}
-				</div>
-			</div>
-
-
-			<div class="lt"></div>
-			<div class="lbox">
-				<div class="thumb">
-					{{museo2| safe}}
-				</div>
-			</div>
-
-			<div class="lt"></div>
-			<div class="lbox">
-				<div class="thumb">
-					{{museo3| safe}}
-				</div>
-			</div>
-
-
-			<div class="lt"></div>
-			<div class="lbox">
-				<div class="thumb">
-					{{museo4| safe}}
-				</div>
-			</div>
-
-			<div class="lt"></div>
-			<div class="lbox">
-				<div class="thumb">
-					{{museo5| safe}}
-				</div>
-			</div>
-
-			{{desplegable | safe}}
-
-
-		</div>
-		<div class="right">
-			<div class="rt"></div>
-			<div class="right_articles">
-			</div>
-			<div class="rt"></div>
-			<div class="right_articles">
-			</div>
-			<div class="rt"></div>
-			<div class="right_articles">
-			</div>
-		</div>
-		<div class="footer">
-			<p>&copy; Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid - <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default" > datos.madrid</a></p>
-		</div>
-	</div>
-</body>
+        <div class="flex-container">
+          <div class="museos">
+            {{formulario | safe}}
+            {{formulario_filtro | safe}}
+            {{lista_museos | safe}}
+            {{contenido | safe}}
+            {{desplegable | safe}}
+            {{formulario_add | safe}}
+          </div>
+          <div class="users">
+            {{usuarios | safe}}
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <p>Esta aplicación utiliza datos del portal de datos abiertos de la ciudad de Madrid <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default">Pinche aquí</a></p>
+      </div>
+    </div>
+  </body>
 </html>

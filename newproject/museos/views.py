@@ -11,6 +11,8 @@ from xml.sax import make_parser
 from django.contrib import admin
 from django.contrib.auth.models import User
 
+
+import datetime
 import random
 import urllib.request
 import sys
@@ -134,7 +136,7 @@ class myContentHandler(ContentHandler):
             info_museo[self.atrSection] = self.theContent
             self.atrSection = ""
 
-            info_museo['COMENTARIO'] = random.randint(0,20)
+            info_museo['COMENTARIO'] = 0
 
             nuevo_museo = Museo(entidad=info_museo['ID-ENTIDAD'],
                                 nombre=info_museo['NOMBRE'],
@@ -173,6 +175,8 @@ class myContentHandler(ContentHandler):
     def characters(self, chars):
         if self.inSection:
             self.theContent = self.theContent + chars
+
+
 
 num_pagina = 0
 formulario = """
@@ -227,7 +231,7 @@ def principal(request):
             for usuario in lista_usuarios:
                 lista += str(usuario) + ": <a href=" + str(usuario) + ">" + str(usuario) + "</a></br>"
 
-            c =({'registro' : logged,'formulario' : formulario, 'usuarios' : "<h4>Usuarios de la página:</h4>" +lista})
+            c =({'registro' : logged,'formulario' : formulario, 'usuarios' : "<div id='box_users'><h4>Usuarios de la página:</h4>" +lista+"</div>"})
             template = get_template("museos/index.html")
             return HttpResponse(template.render(c))
 
@@ -243,7 +247,7 @@ def principal(request):
             for museo in lista:
                 dic_comentarios[museo.id] = museo.comentarios
 
-            lista_ordenada = sorted(dic_comentarios.items(), key=operator.itemgetter(1))
+            lista_ordenada = sorted(dic_comentarios.items(), key=operator.itemgetter(1), reverse=True)
             lista_cinco = lista_ordenada[0:5]
 
             m = []
@@ -296,7 +300,7 @@ def principal(request):
             info_museo_4 = "<div class='box_muse'><h3><a href=" + str(url[3]) + ">" + str(m[3]) + "</a></br>" + str(clase[3]) + " " + str(via[3]) + " " + str(tipo[3]) + " " + str(num[3]) + " " + str(localidad[3]) + " " + str(provincia[3]) + "</br>" + str(codigo[3]) + " " + str(barrio[3]) + "</br>" + str(distrito[3]) + "</br><a href=" + "/museo/" + str(lista_id[3]) + ">" + "Mas información" + "</a></h3></div>"
             info_museo_5 = "<div class='box_muse'><h3><a href=" + str(url[4]) + ">" + str(m[4]) + "</a></br>" + str(clase[4]) + " " + str(via[4]) + " " + str(tipo[4]) + " " + str(num[4]) + " " + str(localidad[4]) + " " + str(provincia[4]) + "</br>" + str(codigo[4]) + " " + str(barrio[4]) + "</br>" + str(distrito[4]) + "</br><a href=" + "/museo/" + str(lista_id[4]) + ">" + "Mas información" + "</a></h3></div>"
 
-            c =({'filtro_accesibilidad': formulario_filtro_accesibilidad, 'registro' : logged, 'museo1' : info_museo_1, 'museo2' : info_museo_2, 'museo3' : info_museo_3, 'museo4' : info_museo_4,'museo5' : info_museo_5, 'desplegable': formulario_desplegable,  'usuarios' : "<h4>Usuarios de la página:</h4>" + lista_users})
+            c =({'filtro_accesibilidad': formulario_filtro_accesibilidad, 'registro' : logged, 'museo1' : info_museo_1, 'museo2' : info_museo_2, 'museo3' : info_museo_3, 'museo4' : info_museo_4,'museo5' : info_museo_5, 'desplegable': formulario_desplegable,  'usuarios' : "<div id='box_users'><h4>Usuarios de la página:</h4>" + lista_users+"</div>"})
             template = get_template("museos/index_museos.html")
             return HttpResponse(template.render(c))
 
@@ -310,6 +314,11 @@ def principal_anotada(request, num_pagina):
     else:
         logged = 'Not logged in. <br>' + '<a class="button log-out" href= "/login">Login</a> <br>'
 
+    lista_users=""
+    lista_usuarios = User.objects.all()
+    for usuario in lista_usuarios:
+        lista_users += str(usuario) + ": <a href=" + str(usuario) + ">" + str(usuario) + "</a></br>"
+
     lista=""
     lista_usuarios = User.objects.all()
     for usuario in lista_usuarios:
@@ -321,7 +330,8 @@ def principal_anotada(request, num_pagina):
     for museo in lista:
         dic_comentarios[museo.id] = museo.comentarios
 
-    lista_ordenada = sorted(dic_comentarios.items(), key=operator.itemgetter(1))
+    lista_ordenada = sorted(dic_comentarios.items(), key=operator.itemgetter(1), reverse=True)
+    print(str(lista_ordenada))
     lista_cinco = lista_ordenada[int(num_pagina):int(num_pagina)+5]
 
     m = []
@@ -374,7 +384,7 @@ def principal_anotada(request, num_pagina):
     info_museo_4 = "<div class='box_muse'><h3><a href=" + str(url[3]) + ">" + str(m[3]) + "</a></br>" + str(clase[3]) + " " + str(via[3]) + " " + str(tipo[3]) + " " + str(num[3]) + " " + str(localidad[3]) + " " + str(provincia[3]) + "</br>" + str(codigo[3]) + " " + str(barrio[3]) + "</br>" + str(distrito[3]) + "</br><a href=" + "/museo/" + str(lista_id[3]) + ">" + "Mas información" + "</a></h3></div>"
     info_museo_5 = "<div class='box_muse'><h3><a href=" + str(url[4]) + ">" + str(m[4]) + "</a></br>" + str(clase[4]) + " " + str(via[4]) + " " + str(tipo[4]) + " " + str(num[4]) + " " + str(localidad[4]) + " " + str(provincia[4]) + "</br>" + str(codigo[4]) + " " + str(barrio[4]) + "</br>" + str(distrito[4]) + "</br><a href=" + "/museo/" + str(lista_id[4]) + ">" + "Mas información" + "</a></h3></div>"
 
-    c =({'registro' : logged, 'museo1' : info_museo_1, 'museo2' : info_museo_2, 'museo3' : info_museo_3, 'museo4' : info_museo_4,'museo5' : info_museo_5, 'desplegable': formulario_desplegable})
+    c =({'registro' : logged, 'museo1' : info_museo_1, 'museo2' : info_museo_2, 'museo3' : info_museo_3, 'museo4' : info_museo_4,'museo5' : info_museo_5, 'desplegable': formulario_desplegable, 'usuarios' : "<div id='box_users'><h4>Usuarios de la página:</h4>" + lista_users})
     template = get_template("museos/index_museos.html")
     return HttpResponse(template.render(c))
 
@@ -385,12 +395,12 @@ def usuario(request, usuario):
     logged = 'Logged in as: ' + request.user.username + '<br> <a class="button log-out" href= "/logout">Logout</a> <br>'
     info_museo = ""
     lista_museos_usuario = Museo_Usuario.objects.all()
-    for museo in lista_museos_usuario:
+    lista_cinco_museos = lista_museos_usuario[0:5]
+    for museo in lista_cinco_museos:
         if museo.usuario == usuario:
-
             identificador = museo.id_museo
             nombre = Museo.objects.get(id=identificador)
-            nom_str="Nombre: <h2>"+str(nombre)+"</h2>"
+            nom_str="<h2>"+str(nombre)+"</h2>"
             via=nombre.via
             clase=nombre.clase
             tipo=nombre.tipo
@@ -401,16 +411,16 @@ def usuario(request, usuario):
             barrio=nombre.barrio
             distrito=nombre.distrito
             url=nombre.url
-            info_museo+="<div>"+str(nom_str)+"<h3>"+str(clase)+" "+str(via)+" "+str(tipo)+" "+str(num)+"</h3><p>"+str(localidad)+"</p><p>"+str(provincia)+"</p><p>"+str(codigo)+"</p><p>"+str(barrio)+"</p><p>"+str(distrito)+"</p><p><a href="+str(url)+">Más info</a></p></div>"
+            info_museo+="<div>"+str(nom_str)+"<h3>"+str(clase)+" "+str(via)+" "+str(tipo)+" "+str(num)+"</h3><p>"+str(localidad)+"</p><p>"+str(provincia)+"</p><p>"+str(codigo)+"</p><p>"+str(barrio)+"</p><p>"+str(distrito) + "<p>" + "El museo fue añadido: " + str(museo.fecha) + "</p><p><a href="+str(url)+">Más info</a></p></div>"
 
-    num_pagina = 0
+    num_pagina = 5
     formulario_desplegable = """
-                            <form action=""" + str(num_pagina) + """ method="POST">
+                            <form action=""" + str(request.user.username) + """/""" + str(num_pagina) + """ method="POST">
                             <input class="button log-out" type="submit" value="VER MAS">
                             </form>
                             """
 
-    c =({'registro' : logged, 'contenido' : "PAGINA DE USUARIO" + info_museo, 'desplegable' : formulario_desplegable})
+    c =({'registro' : logged, 'contenido' : info_museo, 'desplegable' : formulario_desplegable})
     template = get_template("museos/index.html")
     return HttpResponse(template.render(c))
 
@@ -420,7 +430,9 @@ def usuario_anotada(request, usuario, num_pagina):
     logged = 'Logged in as: ' + request.user.username + '<br> <a class="button log-out" href= "/logout">Logout</a> <br>'
     info_museo = ""
     lista_museos_usuario = Museo_Usuario.objects.all()
-    for museo in lista_museos_usuario:
+
+    lista_cinco_museos = lista_museos_usuario[int(num_pagina):int(num_pagina)+5]
+    for museo in lista_cinco_museos:
         if museo.usuario == usuario:
 
             identificador = museo.id_museo
@@ -436,7 +448,7 @@ def usuario_anotada(request, usuario, num_pagina):
             barrio=nombre.barrio
             distrito=nombre.distrito
             url=nombre.url
-            info_museo+="<div>"+str(nom_str)+"<h3>"+str(clase)+" "+str(via)+" "+str(tipo)+" "+str(num)+"</h3><p>"+str(localidad)+"</p><p>"+str(provincia)+"</p><p>"+str(codigo)+"</p><p>"+str(barrio)+"</p><p>"+str(distrito)+"</p><p><a href="+str(url)+">Más info</a></p></div>"
+            info_museo+="<div>"+str(nom_str)+"<h3>"+str(clase)+" "+str(via)+" "+str(tipo)+" "+str(num)+"</h3><p>"+str(localidad)+"</p><p>"+str(provincia)+"</p><p>"+str(codigo)+"</p><p>"+str(barrio)+"</p><p>"+str(distrito)+"<p>" + "El museo fue añadido: " + str(museo.fecha) + "</p></p><p><a href="+str(url)+">Más info</a></p></div>"
 
     num_pagina = int(num_pagina) + 5
     formulario_desplegable = """
@@ -498,35 +510,56 @@ def museos(request):
 
 @csrf_exempt
 def museo_id(request, identificador):
+    print("identificador" + str(identificador))
     if request.user.is_authenticated():
         logged = 'Logged in as: ' + request.user.username + '<br><a class="button log-out" href= "/logout">Logout</a> <br>'
     else:
         logged = 'Not logged in. <br>' + '<a class="button log-out" href= "/login">Login</a> <br>'
 
-    formulario_add = """
+
+
+    formulario_add = """<div>
+                    <form action="" method="POST">
+                    <input class="button log-out" type="submit" name="flag" value="AÑADIR A MI LISTA DE MUSEOS" />
+                    </form>
+                    </div>"""
+
+    formulario_comentario = """
+                        <div>
                         <form action="" method="POST">
-                        <input class="button log-out" type="submit" value="AÑADIR" />
+                        <textarea name="comentario" rows="10" placeholder="Escribe aquí tus comentarios" cols="40"></textarea>
+                        <input class="button log-out" type="submit" name="flag" value="AÑADIR COMENTARIO"/>
                         </form>
+                        </div>
                         """
+
+
 
     if request.user.is_authenticated():
         if request.method == "POST":
-            nuevo_museo = Museo_Usuario(usuario=request.user.username, id_museo=identificador)
-            nuevo_museo.save()
 
-            nombre = Museo.objects.get(id=identificador)
-            lista = Museo.objects.all()
-            for museo in lista:
-                if museo.nombre == str(nombre):
-                    if museo.accesibilidad == 0:
-                        accesibilidad = "El museo es accesible. "
-                    else:
-                        accesibilidad = "El museo no es accesible. "
-                    informacion = museo.nombre + "</br></br>" + museo.descripcion + "</br></br>" + museo.transporte + "</br></br>" + accesibilidad + "</br></br>" +  "<a href=" + str(museo.url) + ">Ver museo</a>" + "</br></br>Dirección: </br>" + museo.clase + " " + museo.via + "</br>" + museo.localidad + "</br>" + museo.provincia + "</br>" + museo.codigo + "</br></br>" + "Barrio: " + museo.barrio + "</br>" + "Distrito: " + museo.distrito + "</br></br>Datos de contacto: </br>" + "Teléfono: " + museo.telefono + "</br>" + "Fax: " + museo.fax + "</br>Email: " + museo.email
+            if str(request.POST['flag']) == "AÑADIR A MI LISTA DE MUSEOS":
 
-            c =({'registro' : logged, 'contenido' : "INFORMACION DEL MUSEO</br>" + informacion, 'formulario_add': "</br>Museo añadido a su lista de museos"})
-            template = get_template("museos/index.html")
-            return HttpResponse(template.render(c))
+                nuevo_museo = Museo_Usuario(usuario=request.user.username, id_museo=identificador, fecha=datetime.datetime.now())
+                nuevo_museo.save()
+
+                c =({'registro' : logged, 'contenido' : "Museo añadido a su lista de museos"})
+                template = get_template("museos/index.html")
+                return HttpResponse(template.render(c))
+
+            else: #añadir a la base de datos de comentarios
+                nuevo_comentario = Comentario(comentario=request.POST.get("comentario",""), id_museo=identificador)
+                print("identificador" + str(identificador))
+                nuevo_comentario.save()
+
+                museo = Museo.objects.get(id=identificador)
+                num_comentarios = museo.comentarios
+                museo.comentarios=int(num_comentarios)+1
+                print("NUMERO COMENTARIOS: " + str(museo.comentarios))
+                museo.save()
+                c =({'registro' : logged, 'contenido' : "Hemos añadido su comentario. Muchas gracias."})
+                template = get_template("museos/index.html")
+                return HttpResponse(template.render(c))
 
         else:
             nombre = Museo.objects.get(id=identificador)
@@ -539,11 +572,19 @@ def museo_id(request, identificador):
                         accesibilidad = "El museo no es accesible. "
                     informacion = museo.nombre + "</br></br>" + museo.descripcion + "</br></br>" + museo.transporte + "</br></br>" + accesibilidad + "</br></br>" +  "<a href=" + str(museo.url) + ">Ver museo</a>" + "</br></br>Dirección: </br>" + museo.clase + " " + museo.via + "</br>" + museo.localidad + "</br>" + museo.provincia + "</br>" + museo.codigo + "</br></br>" + "Barrio: " + museo.barrio + "</br>" + "Distrito: " + museo.distrito + "</br></br>Datos de contacto: </br>" + "Teléfono: " + museo.telefono + "</br>" + "Fax: " + museo.fax + "</br>Email: " + museo.email
 
+            string = "</br></br></br></br><div>"
+            lista_comentarios = Comentario.objects.all()
+            for comentario in lista_comentarios:
+                if comentario.id_museo == identificador:
+                    string += "<p>" + comentario.comentario + "</p>"
 
-            c =({'registro' : logged, 'contenido' : "INFORMACION DEL MUSEO</br>" + informacion, 'formulario_add': formulario_add})
+            string += "</div>"
+
+            c =({'registro' : logged, 'contenido' : informacion, 'formulario_add': formulario_add, 'formulario_comentario' : formulario_comentario, 'comentarios': string})
             template = get_template("museos/index.html")
             return HttpResponse(template.render(c))
     else:
+
         nombre = Museo.objects.get(id=identificador)
         lista = Museo.objects.all()
         for museo in lista:
@@ -554,19 +595,56 @@ def museo_id(request, identificador):
                     accesibilidad = "El museo no es accesible. "
                 informacion = museo.nombre + "</br></br>" + museo.descripcion + "</br></br>" + museo.transporte + "</br></br>" + accesibilidad + "</br></br>" +  "<a href=" + str(museo.url) + ">Ver museo</a>" + "</br></br>Dirección: </br>" + museo.clase + " " + museo.via + "</br>" + museo.localidad + "</br>" + museo.provincia + "</br>" + museo.codigo + "</br></br>" + "Barrio: " + museo.barrio + "</br>" + "Distrito: " + museo.distrito + "</br></br>Datos de contacto: </br>" + "Teléfono: " + museo.telefono + "</br>" + "Fax: " + museo.fax + "</br>Email: " + museo.email
 
+        string = "</br></br></br></br><div>"
+        lista_comentarios = Comentario.objects.all()
+        for comentario in lista_comentarios:
+            if comentario.id_museo == identificador:
+                string += "<p>" + comentario.comentario + "</p>"
+        string += "</div>"
 
-        c =({'registro' : logged, 'contenido' : "INFORMACION DEL MUSEO</br>" + informacion})
+        c =({'registro' : logged, 'contenido' : informacion, 'comentarios': string})
         template = get_template("museos/index.html")
         return HttpResponse(template.render(c))
 
 @csrf_exempt
-def usuario_xml(request):
+def usuario_xml(request,usuario):
+
     if request.user.is_authenticated():
         logged = 'Logged in as: ' + request.user.username + '<br> <a class="button log-out" href= "/logout">Logout</a> <br>'
     else:
         logged = 'Not logged in. <br>' + '<a class="button log-out" href= "/login">Login</a> <br>'
 
-    c =({'registro' : logged, 'contenido' : "USUARIO XML"})
+    xml = "<?xml version='1.0' encoding='UTF-8' ?>"
+
+    lista_museos_usuario = Museo_Usuario.objects.all()
+    for museo in lista_museos_usuario:
+        if museo.usuario == usuario:
+            identificador = museo.id_museo
+            nombre = Museo.objects.get(id=identificador)
+            nom_str="<h2>"+str(nombre)+"</h2>"
+            entidad=nombre.entidad
+            horario=nombre.horario
+            descripcion=nombre.descripcion
+            transporte=nombre.transporte
+            accesibilidad=nombre.accesibilidad
+            via=nombre.via
+            clase=nombre.clase
+            tipo=nombre.tipo
+            num=nombre.num
+            localidad=nombre.localidad
+            provincia=nombre.provincia
+            codigo=nombre.codigo
+            barrio=nombre.barrio
+            distrito=nombre.distrito
+            url=nombre.url
+            telefono = nombre.telefono
+            fax =nombre.fax
+            email = nombre.email
+
+            xml += "<contenido><tipo>EntidadesYOrganismos</tipo>"+"<atributos idioma='es'><atributo nombre='ID-ENTIDAD'>"+str(entidad)+ "</atributo><atributo nombre='NOMBRE'>" + str(nombre)+ "</atributo><atributo nombre='DESCRIPCION-ENTIDAD'>"+str(descripcion)+"</atributo><atributo nombre='HORARIO'>"+str(horario)+"</atributo><atributo nombre='TRANSPORTE'>"+str(transporte)+"</atributo><atributo nombre='ACCESIBILIDAD'>"+str(accesibilidad)+"</atributo><atributo nombre='CONTENT-URL'>"+str(url)+"</atributo><atributo nombre='LOCALIZACION'>"+str(localidad)+"</atributo><atributo nombre='DATOSCONTACTOS'>"+str(telefono)+"</atributo><atributo nombre='TIPO'>/contenido/entidadesYorganismos/Museos</atributo></atributos></contenido>"
+
+
+    c =({'registro' : logged, 'xml' : xml})
     template = get_template("museos/index.html")
     return HttpResponse(template.render(c))
 

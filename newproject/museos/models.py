@@ -33,10 +33,11 @@ class Museo(models.Model):
 
 class Museo_Usuario(models.Model):
     usuario = models.CharField(max_length=532)
-    id_museo = models.CharField(max_length=532)
+    id_museo = models.IntegerField()
+    fecha = models.DateField()
 
 
 
 class Comentario(models.Model):
     comentario = models.CharField(max_length=532)
-    autor = models.CharField(max_length=532)
+    id_museo = models.CharField(max_length=532)

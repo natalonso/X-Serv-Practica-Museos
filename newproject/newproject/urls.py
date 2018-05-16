@@ -28,9 +28,10 @@ urlpatterns = [
     url(r'^(\d+)$','museos.views.principal_anotada'),
     url(r'^museos$','museos.views.museos'),
     url(r'^museo/(\d+)$','museos.views.museo_id'),
-    url(r'^usuario/xml$','museos.views.usuario_xml'),
+    url(r'^(\w+)/xml$','museos.views.usuario_xml'),
     url(r'^about$','museos.views.about'),
     url(r'^(\w+)$','museos.views.usuario'),
+    url(r'^(\w+)/(\d+)$','museos.views.usuario_anotada'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'(style.css/)$', serve, {'document_root': "templates/museos"}),
     url(r'(foto.png/)$', serve, {'document_root': "templates/museos"})

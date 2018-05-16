@@ -63,6 +63,9 @@ a{
 h1{
   margin: 2px;
 }
+textarea{
+  width: 100%;
+}
 ul {
   list-style-type: none;
   margin: 0;
@@ -97,4 +100,8 @@ a:hover , .log-out:hover{
 }
 .log-out{
   float: right;
+}
+
+.users #box_users{
+  margin: 40px;
 }

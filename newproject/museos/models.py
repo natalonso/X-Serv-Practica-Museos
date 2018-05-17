@@ -36,8 +36,10 @@ class Museo_Usuario(models.Model):
     id_museo = models.IntegerField()
     fecha = models.DateField()
 
-
-
 class Comentario(models.Model):
     comentario = models.CharField(max_length=532)
     id_museo = models.CharField(max_length=532)
+
+class Usuario(models.Model):
+    color = models.CharField(max_length=532)
+    tamaño = models.CharField(max_length=532)

@@ -6,6 +6,7 @@ from django.template import Context
 from .models import Museo
 from .models import Comentario
 from .models import Museo_Usuario
+from .models import Usuario
 from xml.sax.handler import ContentHandler
 from xml.sax import make_parser
 from django.contrib import admin
@@ -13,7 +14,6 @@ from django.contrib.auth.models import User
 
 
 import datetime
-import random
 import urllib.request
 import sys
 import operator
@@ -393,36 +393,74 @@ def principal_anotada(request, num_pagina):
 def usuario(request, usuario):
 
     logged = 'Logged in as: ' + request.user.username + '<br> <a class="button log-out" href= "/logout">Logout</a> <br>'
-    info_museo = ""
-    lista_museos_usuario = Museo_Usuario.objects.all()
-    lista_cinco_museos = lista_museos_usuario[0:5]
-    for museo in lista_cinco_museos:
-        if museo.usuario == usuario:
-            identificador = museo.id_museo
-            nombre = Museo.objects.get(id=identificador)
-            nom_str="<h2>"+str(nombre)+"</h2>"
-            via=nombre.via
-            clase=nombre.clase
-            tipo=nombre.tipo
-            num=nombre.num
-            localidad=nombre.localidad
-            provincia=nombre.provincia
-            codigo=nombre.codigo
-            barrio=nombre.barrio
-            distrito=nombre.distrito
-            url=nombre.url
-            info_museo+="<div>"+str(nom_str)+"<h3>"+str(clase)+" "+str(via)+" "+str(tipo)+" "+str(num)+"</h3><p>"+str(localidad)+"</p><p>"+str(provincia)+"</p><p>"+str(codigo)+"</p><p>"+str(barrio)+"</p><p>"+str(distrito) + "<p>" + "El museo fue añadido: " + str(museo.fecha) + "</p><p><a href="+str(url)+">Más info</a></p></div>"
 
     num_pagina = 5
     formulario_desplegable = """
                             <form action=""" + str(request.user.username) + """/""" + str(num_pagina) + """ method="POST">
-                            <input class="button log-out" type="submit" value="VER MAS">
+                            <input class="button log-out" type="submit" value="VER MÁS">
                             </form>
                             """
 
-    c =({'registro' : logged, 'contenido' : info_museo, 'desplegable' : formulario_desplegable})
-    template = get_template("museos/index.html")
-    return HttpResponse(template.render(c))
+    formulario_color = """</br></br></br></br></br>
+                        <div>
+                        <form action="" method="POST">
+                        Cambiar color de fondo: <input type="text" ><br>
+                        <input class="button log-out" type="submit" name="tipo" value="CAMBIAR COLOR"/>
+                        </form>
+                        </div></br></br></br></br></br></br>"""
+
+    formulario_tamaño = """
+                        <div>
+                        <form action="" method="POST">
+                        Cambiar tamaño de letra: <input type="text" ><br>
+                        <input class="button log-out" type="submit" name="tipo" value="CAMBIAR TAMAÑO"/>
+                        </form>
+                        </div></br></br></br></br></br></br>
+                        """
+
+
+    if request.method == "POST":
+
+
+        if str(request.POST['tipo']) == "CAMBIAR COLOR":
+
+            nuevo_usuario = Usuario(color=request.POST.get("color",""))
+            nuevo_usuario.save()
+
+            c =({'registro' : logged, 'contenido' : "Hemos añadido el color a la base de datos. Gracias."})
+            template = get_template("museos/index.html")
+            return HttpResponse(template.render(c))
+
+        else:
+            c =({'registro' : logged, 'contenido' : "Hemos añadido el tamaño a la base de datos. Gracias."})
+            template = get_template("museos/index.html")
+            return HttpResponse(template.render(c))
+    else:
+
+
+        info_museo = ""
+        lista_museos_usuario = Museo_Usuario.objects.all()
+        lista_cinco_museos = lista_museos_usuario[0:5]
+        for museo in lista_cinco_museos:
+            if museo.usuario == usuario:
+                identificador = museo.id_museo
+                nombre = Museo.objects.get(id=identificador)
+                nom_str="<h2>"+str(nombre)+"</h2>"
+                via=nombre.via
+                clase=nombre.clase
+                tipo=nombre.tipo
+                num=nombre.num
+                localidad=nombre.localidad
+                provincia=nombre.provincia
+                codigo=nombre.codigo
+                barrio=nombre.barrio
+                distrito=nombre.distrito
+                url=nombre.url
+                info_museo+="<div>"+str(nom_str)+"<h3>"+str(clase)+" "+str(via)+" "+str(tipo)+" "+str(num)+"</h3><p>"+str(localidad)+"</p><p>"+str(provincia)+"</p><p>"+str(codigo)+"</p><p>"+str(barrio)+"</p><p>"+str(distrito) + "<p>" + "El museo fue añadido: " + str(museo.fecha) + "</p><p><a href="+str(url)+">Más info</a></p></div>"
+
+        c =({'registro' : logged, 'contenido' : info_museo, 'desplegable' : formulario_desplegable, 'color': formulario_color, 'tamaño': formulario_tamaño})
+        template = get_template("museos/index.html")
+        return HttpResponse(template.render(c))
 
 @csrf_exempt
 def usuario_anotada(request, usuario, num_pagina):
@@ -456,8 +494,11 @@ def usuario_anotada(request, usuario, num_pagina):
                             <input class="button log-out" type="submit" value="VER MAS">
                             </form>
                             """
-    print("INFO: " + str(info_museo))
-    c =({'registro' : logged, 'contenido' : "PAGINA DE USUARIO" + info_museo})
+
+    if len(lista_cinco_museos) == 0:
+        info = "NO HAY MÁS MUSEOS QUE MOSTRAR"
+
+    c =({'registro' : logged, 'contenido' : info + info_museo, 'desplegable' : formulario_desplegable})
     template = get_template("museos/index.html")
     return HttpResponse(template.render(c))
 
@@ -614,7 +655,7 @@ def usuario_xml(request,usuario):
     else:
         logged = 'Not logged in. <br>' + '<a class="button log-out" href= "/login">Login</a> <br>'
 
-    xml = "<?xml version='1.0' encoding='UTF-8' ?>"
+    xml = "<?xml version='1.0' encoding='UTF-8' ?>\n<contenidos>"
 
     lista_museos_usuario = Museo_Usuario.objects.all()
     for museo in lista_museos_usuario:
@@ -641,12 +682,13 @@ def usuario_xml(request,usuario):
             fax =nombre.fax
             email = nombre.email
 
-            xml += "<contenido><tipo>EntidadesYOrganismos</tipo>"+"<atributos idioma='es'><atributo nombre='ID-ENTIDAD'>"+str(entidad)+ "</atributo><atributo nombre='NOMBRE'>" + str(nombre)+ "</atributo><atributo nombre='DESCRIPCION-ENTIDAD'>"+str(descripcion)+"</atributo><atributo nombre='HORARIO'>"+str(horario)+"</atributo><atributo nombre='TRANSPORTE'>"+str(transporte)+"</atributo><atributo nombre='ACCESIBILIDAD'>"+str(accesibilidad)+"</atributo><atributo nombre='CONTENT-URL'>"+str(url)+"</atributo><atributo nombre='LOCALIZACION'>"+str(localidad)+"</atributo><atributo nombre='DATOSCONTACTOS'>"+str(telefono)+"</atributo><atributo nombre='TIPO'>/contenido/entidadesYorganismos/Museos</atributo></atributos></contenido>"
 
 
-    c =({'registro' : logged, 'xml' : xml})
-    template = get_template("museos/index.html")
-    return HttpResponse(template.render(c))
+            xml += "<contenido>\n<tipo>EntidadesYOrganismos</tipo>\n<atributo nombre='ID-ENTIDAD'>"+str(entidad)+"</atributo>\n<atributo nombre='NOMBRE'>"+str(nombre)+"</atributo>\n<atributo nombre='DESCRIPCION-ENTIDAD'>"+str(descripcion)+"</atributo><atributo nombre='HORARIO'>"+str(horario)+"</atributo><atributo nombre='TRANSPORTE'>"+str(transporte)+"</atributo><atributo nombre='ACCESIBILIDAD'>"+str(accesibilidad)+"</atributo><atributo nombre='NOMBRE-VIA'>"+str(via)+"</atributo><atributo nombre='CLASE-VIAL'>"+str(clase)+"</atributo>\n<atributo nombre='TIPO-NUM'>"+str(tipo)+"</atributo>\n<atributo nombre='NUM'>"+str(num)+"</atributo>\n<atributo nombre='LOCALIDAD'>"+str(localidad)+"</atributo><atributo nombre='PROVINCIA'>"+str(provincia)+"</atributo><atributo nombre='CODIGO-POSTAL'>"+str(codigo)+"</atributo><atributo nombre='BARRIO'>"+str(barrio)+"</atributo><atributo nombre='DISTRITO'>"+str(distrito)+"</atributo><atributo nombre='TELEFONO'>"+str(telefono)+"</atributo>\n<atributo nombre='FAX'>"+str(fax)+"</atributo>\n<atributo nombre='EMAIL'>"+str("hola")+"</atributo>\n</contenido>\n"
+
+    xml += "</contenidos>"
+
+    return HttpResponse(str(xml), content_type="text/xml")
 
 
 @csrf_exempt
@@ -656,6 +698,9 @@ def about(request):
     else:
         logged = 'Not logged in. <br>' + '<a class="button log-out" href= "/login">Login</a> <br>'
 
-    c =({'registro' : logged, 'contenido' : "PAGINA DE INFORMACION"})
+    color = "SALMON"
+    tamaño = "20px"
+
+    c =({'registro' : logged, 'contenido' : "PAGINA DE INFORMACION", 'color' : color, 'tamaño' : tamaño})
     template = get_template("museos/index.html")
     return HttpResponse(template.render(c))

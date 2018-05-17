@@ -4,6 +4,12 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+      html{background-color: {{color|safe}}}
+      body {font-size:{{tamaño | safe}}}
+    </style>
+
   </head>
   <body>
     <div class="wrapper">
@@ -23,6 +29,7 @@
           <li><a href="/">Principal</a></li>
           <li><a href="/museos">Museos</a></li>
           <li><a href="/about">About</a></li>
+
         </ul>
       </div>
       <div class="content">
@@ -37,7 +44,9 @@
             {{formulario_add | safe}}
             {{formulario_comentario | safe}}
             {{comentarios | safe}}
-            {{xml}}
+            {{color | safe}}
+            {{tamaño | safe}}
+
           </div>
           <div class="users">
             {{usuarios | safe}}

@@ -41,5 +41,7 @@ class Comentario(models.Model):
     id_museo = models.CharField(max_length=532)
 
 class Usuario(models.Model):
-    color = models.CharField(max_length=532)
-    tamaño = models.CharField(max_length=532)
+    usuario = models.CharField(max_length=20)
+    titulo = models.CharField(max_length=50)
+    color = models.CharField(max_length=52)
+    tamaño = models.CharField(max_length=52)

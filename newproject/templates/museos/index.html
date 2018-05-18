@@ -27,8 +27,9 @@
       <div class="nav">
         <ul>
           <li><a href="/">Principal</a></li>
-          <li><a href="/museos">Museos</a></li>
-          <li><a href="/about">About</a></li>
+          <li><a href="/museos">Lista de Museos</a></li>
+          <li><a href="/about">Información</a></li>
+          {{enlace_mipagina | safe}}
 
         </ul>
       </div>
@@ -36,17 +37,18 @@
 
         <div class="flex-container">
           <div class="museos">
+            {{titulo | safe}}
+            {{formulario_filtro | safe}}</br></br>
             {{formulario | safe}}
-            {{formulario_filtro | safe}}
             {{lista_museos | safe}}
             {{contenido | safe}}
             {{desplegable | safe}}
             {{formulario_add | safe}}
             {{formulario_comentario | safe}}
             {{comentarios | safe}}
-            {{color | safe}}
-            {{tamaño | safe}}
-
+            {{formulario_color | safe}}
+            {{formulario_tamaño | safe}}
+            {{formulario_titulo | safe}}
           </div>
           <div class="users">
             {{usuarios | safe}}

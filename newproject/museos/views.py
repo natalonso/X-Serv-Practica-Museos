@@ -457,7 +457,40 @@ def usuario(request, id_usuario):
 
     if request.user.is_authenticated():
         enlace_mipagina = "<li><a href="+str(request.user.username)+">Mi Página</a></li>"
+        if id_usuario == request.user.username:
+            formulario_color = """</br></br></br></br></br>
+                                        <div>
+                                        <form action="" method="POST">
+                                        Cambiar color de fondo: <input type="text" name="color"><br>
+                                        <input class="button log-out" type="submit" name="tipo" value="CAMBIAR COLOR"/>
+                                        </form>
+                                        </div></br></br></br></br></br></br>"""
+
+            formulario_tamaño = """
+                                        <div>
+                                        <form action="" method="POST">
+                                        Cambiar tamaño de letra: <input type="text" name="tamaño"><br>
+                                        <input class="button log-out" type="submit" name="tipo" value="CAMBIAR TAMAÑO"/>
+                                        </form>
+                                        </div></br></br></br></br></br></br>
+                                        """
+
+            formulario_titulo = """
+                                        <div>
+                                        <form action="" method="POST">
+                                        Cambiar título de la página: <input type="text" name="titulo"><br>
+                                        <input class="button log-out" type="submit" name="tipo" value="CAMBIAR TÍTULO"/>
+                                        </form>
+                                        </div></br></br></br></br></br></br>
+                                        """
+        else:
+            formulario_color = ""
+            formulario_tamaño = ""
+            formulario_titulo = ""
     else:
+        formulario_color = ""
+        formulario_tamaño = ""
+        formulario_titulo = ""
         enlace_mipagina = ""
 
     lista_usuarios = Usuario.objects.all()
@@ -488,31 +521,7 @@ def usuario(request, id_usuario):
                             </form>
                             """
 
-    formulario_color = """</br></br></br></br></br>
-                        <div>
-                        <form action="" method="POST">
-                        Cambiar color de fondo: <input type="text" name="color"><br>
-                        <input class="button log-out" type="submit" name="tipo" value="CAMBIAR COLOR"/>
-                        </form>
-                        </div></br></br></br></br></br></br>"""
 
-    formulario_tamaño = """
-                        <div>
-                        <form action="" method="POST">
-                        Cambiar tamaño de letra: <input type="text" name="tamaño"><br>
-                        <input class="button log-out" type="submit" name="tipo" value="CAMBIAR TAMAÑO"/>
-                        </form>
-                        </div></br></br></br></br></br></br>
-                        """
-
-    formulario_titulo = """
-                        <div>
-                        <form action="" method="POST">
-                        Cambiar título de la página: <input type="text" name="titulo"><br>
-                        <input class="button log-out" type="submit" name="tipo" value="CAMBIAR TÍTULO"/>
-                        </form>
-                        </div></br></br></br></br></br></br>
-                        """
 
 
     if request.method == "POST":
@@ -673,7 +682,7 @@ def usuario_anotada(request, usuario, num_pagina):
 
 
 @csrf_exempt
-def usuario_xml(request,usuario):
+def usuario_xml(request,nombre_usuario):
 
     if request.user.is_authenticated():
         enlace_mipagina = "<li><a href="+str(request.user.username)+">Mi Página</a></li>"
@@ -698,10 +707,11 @@ def usuario_xml(request,usuario):
         tamaño = ""
 
     xml = "<?xml version='1.0' encoding='UTF-8' ?>\n<contenidos>"
+    print("USUARIO: " + str(nombre_usuario))
 
     lista_museos_usuario = Museo_Usuario.objects.all()
     for museo in lista_museos_usuario:
-        if museo.usuario == usuario:
+        if museo.usuario == nombre_usuario:
             identificador = museo.id_museo
             nombre = Museo.objects.get(id=identificador)
             nom_str="<h2>"+str(nombre)+"</h2>"
@@ -723,8 +733,6 @@ def usuario_xml(request,usuario):
             telefono = nombre.telefono
             fax =nombre.fax
             email = nombre.email
-
-
 
             xml += "<contenido>\n<tipo>EntidadesYOrganismos</tipo>\n<atributo nombre='ID-ENTIDAD'>"+str(entidad)+"</atributo>\n<atributo nombre='NOMBRE'>"+str(nombre)+"</atributo>\n<atributo nombre='DESCRIPCION-ENTIDAD'>"+str(descripcion)+"</atributo><atributo nombre='HORARIO'>"+str(horario)+"</atributo><atributo nombre='TRANSPORTE'>"+str(transporte)+"</atributo><atributo nombre='ACCESIBILIDAD'>"+str(accesibilidad)+"</atributo><atributo nombre='NOMBRE-VIA'>"+str(via)+"</atributo><atributo nombre='CLASE-VIAL'>"+str(clase)+"</atributo>\n<atributo nombre='TIPO-NUM'>"+str(tipo)+"</atributo>\n<atributo nombre='NUM'>"+str(num)+"</atributo>\n<atributo nombre='LOCALIDAD'>"+str(localidad)+"</atributo><atributo nombre='PROVINCIA'>"+str(provincia)+"</atributo><atributo nombre='CODIGO-POSTAL'>"+str(codigo)+"</atributo><atributo nombre='BARRIO'>"+str(barrio)+"</atributo><atributo nombre='DISTRITO'>"+str(distrito)+"</atributo><atributo nombre='TELEFONO'>"+str(telefono)+"</atributo>\n<atributo nombre='FAX'>"+str(fax)+"</atributo>\n<atributo nombre='EMAIL'>"+str("hola")+"</atributo>\n</contenido>\n"
 
@@ -801,7 +809,7 @@ def museos(request):
 def museo_id(request, identificador):
 
     if request.user.is_authenticated():
-        enlace_mipagina = "<li><a href="+str(request.user.username)+">Mi Página</a></li>"
+        enlace_mipagina = "<li><a href=/"+str(request.user.username)+">Mi Página</a></li>"
         logged = 'Logged in as: ' + request.user.username + '<br> <a class="button log-out" href= "/logout">Logout</a> <br>'
         lista_usuarios = Usuario.objects.all()
         encontrado = False
@@ -934,6 +942,8 @@ def about(request):
         color = ""
         tamaño = ""
 
-    c =({'enlace_mipagina': enlace_mipagina,'registro' : logged, 'color' : color, 'tamaño' : tamaño, 'contenido' : "PAGINA DE INFORMACION", 'color' : color, 'tamaño' : tamaño})
+    about = "<!doctype html><html><head><h1>Información sobre la aplicación</h1></head><h3>Breve descripción del sitio y su funcionalidad</h3><br><body>Esta página trata de crear un portal donde la gente puede obtener información sobre todos los museos de la Comunidad de Madrid. Además, puede escribir comentarios si es un usuario registrado. Los usuarios que se registren cuentan con una página propia donde pueden elegir un título para su página, el color de fondo para el sitio y el tamaño de letra. Además, puede ir añadiendo museos a su página personal.</br></br>La página principal, consta de cinco museos y un botón a través del cual pueden ver los cinco siguientes museos de la lista, también de una lista con los usuarios registrados y además un filtro de accesibilidad, que muestra solo los museos accesibles. </br></br>En la pestaña Lista de Museos, pueden ver una lista con todos los museos y filtrarlos por distrito. Pueden acceder a información más detallada sobre un museo pinchando en el enlace del museo en cuestión. </br></br>Nuestra página web también permite mostrar el XML con la lista de musesos seleccionados de cada uno de nuestros usuarios registrados.</br></br><p>Esta aplicación web, es un proyecto para la asignatura de Servicios y Aplicaciones en Reder de Ordenadores.</p></br><p>Autora: Natalia Alonso Arteaga.</p></br></body></html>"
+
+    c =({'enlace_mipagina': enlace_mipagina,'registro' : logged, 'color' : color, 'tamaño' : tamaño, 'contenido' : str(about), 'color' : color, 'tamaño' : tamaño})
     template = get_template("museos/index.html")
     return HttpResponse(template.render(c))

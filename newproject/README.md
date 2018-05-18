@@ -1,6 +1,8 @@
 
 Nombre del alumno: Natalia Alonso Arteaga
+
 Titulación: Sistemas de Telecomunicaciones y ADE
+
 Cuenta de laboratorio: nalonso
 
 Asignatura: Servicios y Aplicaciones en Redes de Ordenadores
